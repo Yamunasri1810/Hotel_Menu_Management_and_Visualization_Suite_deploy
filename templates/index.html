@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Orders</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #fdf6f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 20px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #a0522d;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7a2f00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Our Hotel</h1>
+        <button onclick="window.location.href='/menu'">New Order</button>
+        <button onclick="showBill()">Previous Order Bill</button>
+    </div>
+
+    <script>
+        function showBill() {
+            fetch('/get_bill')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert(data.message);
+                        return;
+                    }
+                    let billText = "Your Previous Order Bill:\n\n";
+                    let total = 0;
+                    const menu = data.menu;
+                    const menuDict = {};
+                    menu.forEach(item => menuDict[item.id] = item.name);
+
+                    data.orders.forEach(item => {
+                        const name = menuDict[item.id] || `Dish #${item.id}`;
+                        const subtotal = item.quantity * item.price;
+                        billText += `${item.quantity} x ${name} = ₹${subtotal.toFixed(2)}\n`;
+                        total += subtotal;
+                    });
+
+                    billText += `\nTotal: ₹${total.toFixed(2)}`;
+                    alert(billText);
+                });
+        }
+    </script>
+</body>
+</html>
+

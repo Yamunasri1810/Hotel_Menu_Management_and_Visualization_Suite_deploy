@@ -1,0 +1,98 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chef Dashboard</title>
+    <style>
+        body { font-family: Arial; background: #fff3e6; padding: 20px; }
+        h1 { color: #a0522d; }
+        .order-block { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .order-block h2 { margin-top: 0; }
+        ul { list-style-type: none; padding-left: 0; }
+        li { padding: 5px 0; }
+        input[type="checkbox"] { margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Chef Dashboard</h1>
+    {% if orders %}
+        {% for order in orders %}
+            <div class="order-block">
+                <h2>Order from: {{ order.name }}</h2>
+                <ul>
+                    {% for item in order.order %}
+                        {% set dish = menu | selectattr('id', 'equalto', item.id) | first %}
+                        <li><input type="checkbox"> {{ item.quantity }} × {{ dish.name }}</li>
+                    {% endfor %}
+                </ul>
+                <small>Placed at: {{ order.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No current orders.</p>
+    {% endif %}
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chef Dashboard</title>
+    <style>
+        body { font-family: Arial; background: #fff3e6; padding: 20px; }
+        h1 { color: #a0522d; }
+        .order-block {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .order-block h2 {
+            margin-top: 0;
+            color: #a0522d;
+        }
+        ul { list-style-type: none; padding-left: 0; }
+        li { padding: 5px 0; }
+        input[type="checkbox"] { margin-right: 10px; }
+        .meta {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chef Dashboard</h1>
+    {% if orders %}
+        {% for order in orders %}
+            <div class="order-block">
+                <h2>Order from: {{ order.user_name }}</h2>
+                <p class="meta">Table: {{ order.table_number }}</p>
+                <ul>
+                    {% for item in order["items"] %}
+                        {% set dish = menu | selectattr('id', 'equalto', item.id) | first %}
+                        <li><input type="checkbox"> {{ item.quantity }} × {{ dish.name }}</li>
+                    {% endfor %}
+                </ul>
+                {% if order.timestamp %}
+                    <p class="meta">Placed at: {{ order.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                {% else %}
+                    <p class="meta">Placed at: Not available</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No current orders.</p>
+    {% endif %}
+    <script>
+    // Automatically refresh every 30 seconds to fetch new orders
+    setInterval(() => {
+        window.location.reload();
+    }, 30000); // 30000 milliseconds = 30 seconds
+</script>
+
+</body>
+</html>

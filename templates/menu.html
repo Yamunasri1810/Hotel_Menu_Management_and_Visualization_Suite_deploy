@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Menu</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fdf6f0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px;
+        }
+        h1 {
+            color: #a0522d;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+        .welcome {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #703a0f;
+            font-weight: 600;
+        }
+        .main-content {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .menu-container {
+            flex: 3;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(160, 82, 45, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .current-order {
+            flex: 1;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(160, 82, 45, 0.2);
+        }
+        .current-order h3 {
+            margin-top: 0;
+            color: #a0522d;
+        }
+        .order-item {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .dish {
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+            margin-bottom: 20px;
+        }
+        .dish img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .dish-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #703a0f;
+            text-align: center;
+        }
+        .dish-price {
+            color: #a0522d;
+            font-weight: 600;
+            margin: 5px 0;
+            text-align: center;
+        }
+        .qty-select {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        button {
+            background: #a0522d;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin: 0 5px;
+        }
+        button:hover {
+            background: #7a2f00;
+        }
+        .qty-display {
+            font-size: 1.1rem;
+            width: 30px;
+            text-align: center;
+        }
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #message {
+            margin-top: 15px;
+            font-weight: 600;
+            color: #228B22;
+            min-height: 24px;
+            text-align: center;
+        }
+        #billModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 10px;
+        }
+        #billContent {
+            background: white;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 6px 15px rgba(160,82,45,0.6);
+        }
+        #billContent h2 {
+            color: #a0522d;
+            margin-top: 0;
+            font-weight: 700;
+            text-align: center;
+        }
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        #totalAmount {
+            font-weight: 700;
+            font-size: 1.3rem;
+            border-top: 2px solid #a0522d;
+            padding-top: 10px;
+            color: #7a2f00;
+        }
+        #closeBillBtn {
+            display: block;
+            background: #a0522d;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 3px 7px rgba(160,82,45,0.7);
+        }
+        #closeBillBtn:hover {
+            background: #7a2f00;
+        }
+
+        .table-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .table-button {
+            margin: 5px;
+            padding: 10px 15px;
+            border: none;
+            background-color: #a0522d;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .table-button.selected {
+            background-color: #7a2f00;
+            font-weight: bold;
+        }
+
+        #thankYouPage {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #fff8f0, #ffe5d9);
+    color: #703a0f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.thank-you-text {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.thank-you-text p {
+    margin: 10px 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+        #thankYouPage {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #fdf6f0;
+            color: #703a0f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hotel Menu</h1>
+    <div class="welcome">Welcome, {{ session['user']['name'] }}</div>
+
+    <div class="table-buttons" id="tableButtons">
+        {% for i in range(1, 11) %}
+            <button class="table-button" onclick="selectTable({{ i }})" id="table-btn-{{ i }}">Table {{ i }}</button>
+        {% endfor %}
+    </div>
+
+    <input type="hidden" id="tableSelect" />
+
+    <div class="main-content">
+        <div class="menu-container">
+            {% for dish in dishes %}
+            <div class="dish">
+                <img src="{{ dish.image }}" alt="{{ dish.name }}">
+                <div class="dish-name">{{ dish.name }}</div>
+                <div class="dish-price">₹{{ dish.price }}</div>
+                <div class="qty-select">
+                    <button onclick="changeQuantity({{ dish.id }}, -1)">-</button>
+                    <span id="qty-{{ dish.id }}" class="qty-display">0</span>
+                    <button onclick="changeQuantity({{ dish.id }}, 1)">+</button>
+                    <input type="hidden" value="0" class="qty-input" data-id="{{ dish.id }}" data-price="{{ dish.price }}" />
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="current-order">
+            <h3>Current Order</h3>
+            <div id="currentOrderItems"></div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button onclick="sendOrder()">Send Order</button>
+        <button onclick="showBill()">Get Bill</button>
+    </div>
+    <div id="message"></div>
+
+    <div id="billModal">
+        <div id="billContent">
+            <h2>Bill</h2>
+            <p><strong>Name:</strong> {{ session['user']['name'] }}</p>
+            <p><strong>Time:</strong> <span id="billTimestamp"></span></p>
+            <div id="billItems"></div>
+            <div id="totalAmount"></div>
+            <button id="closeBillBtn" onclick="closeBill()">Close</button>
+        </div>
+    </div>
+    <div id="thankYouPage">
+        <div class="thank-you-text">
+            <p>Thank you for visiting!</p>
+            <p>We hope you had a wonderful meal 🍽️</p>
+            <p>Please come back soon! 😊</p>
+        </div>
+    </div>
+
+    <script>
+        const orderState = {};
+
+        function selectTable(number) {
+            document.getElementById('tableSelect').value = number;
+            document.querySelectorAll('.table-button').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('table-btn-' + number).classList.add('selected');
+
+            if (orderState[number]) {
+                document.querySelectorAll('.qty-input').forEach(input => {
+                    const id = input.dataset.id;
+                    const qty = orderState[number][id] || 0;
+                    input.value = qty;
+                    document.getElementById(`qty-${id}`).textContent = qty;
+                });
+            } else {
+                document.querySelectorAll('.qty-input').forEach(input => {
+                    input.value = 0;
+                    document.getElementById(`qty-${input.dataset.id}`).textContent = 0;
+                });
+            }
+            updateCurrentOrder();
+        }
+
+        function changeQuantity(dishId, change) {
+            const qtyDisplay = document.getElementById(`qty-${dishId}`);
+            let currentQty = parseInt(qtyDisplay.textContent) || 0;
+            currentQty += change;
+            if (currentQty < 0) currentQty = 0;
+            qtyDisplay.textContent = currentQty;
+            const input = document.querySelector(`.qty-input[data-id="${dishId}"]`);
+            input.value = currentQty;
+
+            const tableNumber = document.getElementById('tableSelect').value;
+            if (tableNumber) {
+                if (!orderState[tableNumber]) orderState[tableNumber] = {};
+                orderState[tableNumber][dishId] = currentQty;
+            }
+
+            updateCurrentOrder();
+        }
+
+        function updateCurrentOrder() {
+            const qtyInputs = document.querySelectorAll('.qty-input');
+            const currentOrderDiv = document.getElementById("currentOrderItems");
+            currentOrderDiv.innerHTML = '';
+            qtyInputs.forEach(input => {
+                let qty = parseInt(input.value) || 0;
+                if (qty > 0) {
+                    let dishId = input.dataset.id;
+                    let dishName = document.querySelector(`#qty-${dishId}`).closest('.dish').querySelector('.dish-name').textContent;
+                    let itemDiv = document.createElement('div');
+                    itemDiv.className = 'order-item';
+                    itemDiv.textContent = `${qty} × ${dishName}`;
+                    currentOrderDiv.appendChild(itemDiv);
+                }
+            });
+        }
+
+        function sendOrder() {
+            const order = Array.from(document.querySelectorAll('.qty-input'))
+                .filter(input => parseInt(input.value) > 0)
+                .map(input => ({
+                    id: parseInt(input.dataset.id),
+                    quantity: parseInt(input.value),
+                    price: parseFloat(input.dataset.price)
+                }));
+
+            const tableNumber = document.getElementById('tableSelect').value;
+
+            if (!tableNumber) {
+                document.getElementById("message").style.color = 'red';
+                document.getElementById("message").textContent = 'Please select a table number.';
+                return;
+            }
+
+            if (order.length === 0) {
+                document.getElementById("message").style.color = 'red';
+                document.getElementById("message").textContent = 'Please select at least one dish.';
+                return;
+            }
+
+            fetch('/submit_order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: order, table_number: tableNumber })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("message").style.color = '#228B22';
+                document.getElementById("message").textContent = data.message;
+            })
+            .catch(err => {
+                document.getElementById("message").style.color = 'red';
+                document.getElementById("message").textContent = 'Error submitting order.';
+            });
+        }
+
+        function showBill() {
+            fetch('/get_bill')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    document.getElementById("message").style.color = 'red';
+                    document.getElementById("message").textContent = data.message;
+                    return;
+                }
+                const now = new Date();
+                document.getElementById("billTimestamp").textContent = now.toLocaleString();
+
+                const billItems = document.getElementById("billItems");
+                billItems.innerHTML = '';
+                data.orders.forEach(item => {
+                    let div = document.createElement('div');
+                    div.className = 'bill-item';
+                    div.textContent = `${item.quantity} × ${item.name}`;
+                    let span = document.createElement('span');
+                    span.textContent = `₹${item.total_price.toFixed(2)}`;
+                    div.appendChild(span);
+                    billItems.appendChild(div);
+                });
+                document.getElementById("totalAmount").textContent = 'Total: ₹' + data.total.toFixed(2);
+                document.getElementById("billModal").style.display = "flex";
+            });
+        }
+
+        function closeBill() {
+            document.getElementById("billModal").style.display = "none";
+            document.getElementById("thankYouPage").style.display = "flex";
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 60000);
+        }
+
+        // Ensure thankYouPage is hidden when the page loads
+    window.addEventListener('load', () => {
+        const thankYouPage = document.getElementById("thankYouPage");
+        if (thankYouPage) {
+            thankYouPage.style.display = "none";
+        }
+    });
+
+    </script>
+</body>
+</html>
